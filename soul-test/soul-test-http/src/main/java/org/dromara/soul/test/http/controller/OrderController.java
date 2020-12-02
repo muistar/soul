@@ -1,19 +1,18 @@
 /*
- *   Licensed to the Apache Software Foundation (ASF) under one or more
- *   contributor license agreements.  See the NOTICE file distributed with
- *   this work for additional information regarding copyright ownership.
- *   The ASF licenses this file to You under the Apache License, Version 2.0
- *   (the "License"); you may not use this file except in compliance with
- *   the License.  You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.dromara.soul.test.http.controller;
@@ -37,7 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/order")
 @SoulSpringMvcClient(path = "/order")
 public class OrderController {
-    
+
     /**
      * Save order dto.
      *
@@ -45,12 +44,12 @@ public class OrderController {
      * @return the order dto
      */
     @PostMapping("/save")
-    @SoulSpringMvcClient(path = "/save")
+    @SoulSpringMvcClient(path = "/save" , desc = "订单保存")
     public OrderDTO save(@RequestBody final OrderDTO orderDTO) {
         orderDTO.setName("hello world save order");
         return orderDTO;
     }
-    
+
     /**
      * Find by id order dto.
      *
@@ -58,14 +57,14 @@ public class OrderController {
      * @return the order dto
      */
     @GetMapping("/findById")
-    @SoulSpringMvcClient(path = "/findById")
+    @SoulSpringMvcClient(path = "/findById", desc = "根据id获取")
     public OrderDTO findById(@RequestParam("id") final String id) {
         OrderDTO orderDTO = new OrderDTO();
         orderDTO.setId(id);
         orderDTO.setName("hello world findById");
         return orderDTO;
     }
-    
+
     /**
      * Gets path variable.
      *
@@ -81,7 +80,7 @@ public class OrderController {
         orderDTO.setName("hello world restful: " + name);
         return orderDTO;
     }
-    
+
     /**
      * Test rest ful order dto.
      *

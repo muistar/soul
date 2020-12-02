@@ -1,20 +1,18 @@
 /*
- *
  * Licensed to the Apache Software Foundation (ASF) under one or more
- * Contributor license agreements.See the NOTICE file distributed with
- * This work for additional information regarding copyright ownership.
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * he License.You may obtain a copy of the License at
+ * the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 
 package org.dromara.soul.plugin.base.utils;
@@ -52,7 +50,7 @@ public class CheckUtils {
                 || PluginEnum.DUBBO.getName().equals(pluginName)
                 || PluginEnum.SPRING_CLOUD.getName().equals(pluginName)) {
             LOGGER.error("can not match selector data :{}", pluginName);
-            Object error = SoulResultWarp.error(SoulResultEnum.CANNOT_FIND_SELECTOR.getCode(), SoulResultEnum.CANNOT_FIND_SELECTOR.getMsg(), null);
+            Object error = SoulResultWrap.error(SoulResultEnum.CANNOT_FIND_SELECTOR.getCode(), SoulResultEnum.CANNOT_FIND_SELECTOR.getMsg(), null);
             return WebFluxResultUtils.result(exchange, error);
         }
         return chain.execute(exchange);
@@ -71,7 +69,7 @@ public class CheckUtils {
                 || PluginEnum.DUBBO.getName().equals(pluginName)
                 || PluginEnum.SPRING_CLOUD.getName().equals(pluginName)) {
             LOGGER.error("can not match rule data :{}", pluginName);
-            Object error = SoulResultWarp.error(SoulResultEnum.RULE_NOT_FIND.getCode(), SoulResultEnum.RULE_NOT_FIND.getMsg(), null);
+            Object error = SoulResultWrap.error(SoulResultEnum.RULE_NOT_FIND.getCode(), SoulResultEnum.RULE_NOT_FIND.getMsg(), null);
             return WebFluxResultUtils.result(exchange, error);
         }
         return chain.execute(exchange);

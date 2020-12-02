@@ -30,8 +30,6 @@ import org.dromara.soul.client.springcloud.config.SoulSpringCloudConfig;
 import org.dromara.soul.client.springcloud.dto.SpringCloudRegisterDTO;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.lang.NonNull;
@@ -46,16 +44,16 @@ import org.springframework.web.bind.annotation.RestController;
  * @author xiaoyu(Myth)
  */
 @Slf4j
-public class SpringCloudClientBeanPostProcessor implements BeanPostProcessor, ApplicationListener<ContextRefreshedEvent> {
-    
+public class SpringCloudClientBeanPostProcessor implements BeanPostProcessor {
+
     private final ThreadPoolExecutor executorService;
-    
+
     private final String url;
-    
+
     private final SoulSpringCloudConfig config;
-    
+
     private final Environment env;
-    
+
     /**
      * Instantiates a new Soul client bean post processor.
      *
@@ -76,9 +74,12 @@ public class SpringCloudClientBeanPostProcessor implements BeanPostProcessor, Ap
         this.url = adminUrl + "/soul-client/springcloud-register";
         executorService = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
     }
-    
+
     @Override
-    public Object postProcessBeforeInitialization(@NonNull final Object bean, @NonNull final String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@NonNull final Object bean, @NonNull final String beanName) throws BeansException {
+        if (config.isFull()) {
+            return bean;
+        }
         Controller controller = AnnotationUtils.findAnnotation(bean.getClass(), Controller.class);
         RestController restController = AnnotationUtils.findAnnotation(bean.getClass(), RestController.class);
         RequestMapping requestMapping = AnnotationUtils.findAnnotation(bean.getClass(), RequestMapping.class);
@@ -106,20 +107,20 @@ public class SpringCloudClientBeanPostProcessor implements BeanPostProcessor, Ap
         }
         return bean;
     }
-    
+
     private void post(final String json) {
         try {
             String result = OkHttpTools.getInstance().post(url, json);
             if (Objects.equals(result, "success")) {
-                log.info("http client register success :{} " + json);
+                log.info("http client register success :{} ", json);
             } else {
-                log.error("http client register error :{} " + json);
+                log.error("http client register error :{} ", json);
             }
         } catch (IOException e) {
             log.error("cannot register soul admin param :{}", url + ":" + json);
         }
     }
-    
+
     private String buildJsonParams(final SoulSpringCloudClient soulSpringCloudClient, final String contextPath, final String prePath) {
         String appName = env.getProperty("spring.application.name");
         String path = contextPath + prePath + soulSpringCloudClient.path();
@@ -136,14 +137,6 @@ public class SpringCloudClientBeanPostProcessor implements BeanPostProcessor, Ap
                 .ruleName(ruleName)
                 .build();
         return OkHttpTools.getInstance().getGosn().toJson(registerDTO);
-        
-    }
-    
-    @Override
-    public void onApplicationEvent(@NonNull final ContextRefreshedEvent contextRefreshedEvent) {
-        if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
-            executorService.shutdown();
-        }
     }
 }
 
